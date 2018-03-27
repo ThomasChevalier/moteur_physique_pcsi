@@ -4,6 +4,9 @@ from World import World
 from RigidBody import RigidBody
 from Vector import Vector
 
+
+from Geometry import Polygon
+
 from render import *
 from coordinates import set_zoom
 from coordinates import get_zoom
@@ -11,6 +14,17 @@ from coordinates import get_zoom
 def weight(body):
 	return Vector(0, -9.81*body.mass)
 
+
+
+p = Polygon()
+p.add_point(Vector(0, 0))
+p.add_point(Vector(3, 0))
+p.add_point(Vector(1, 3))
+p.add_point(Vector(0, 3))
+print(p.check())
+
+
+quit()
 # Initialize the game engine
 pygame.init()
 

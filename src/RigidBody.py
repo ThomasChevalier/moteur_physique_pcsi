@@ -4,6 +4,7 @@ class RigidBody:
 	def __init__(self, mass, moment_inertia, center_grav):
 		"""
 		Constructeur d'un solide indéformable
+		Le référentiel de l'objet à pour origin son coin en haut à gauche
 		mass : la masse du solide en kg
 		moment_inertia : le moment d'inertie de l'objet
 		center_grav : un vecteur décrivant le centre de gravité du solide, par rapport à son origine (en haut à droite par défaut)
