@@ -48,7 +48,7 @@ while not quit :
 
 	world.update()
 
-	render(screen, zoom, world)
+	render(screen, world)
 
 	clock.tick(60)
 
