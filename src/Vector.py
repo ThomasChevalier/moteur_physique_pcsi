@@ -67,3 +67,21 @@ class Vector:
 		Retourne Vraie si les deux vecteurs sont colinéaire, Faux sinon
 		"""
 		return self.x * other.y - self.y * other.x
+
+	def norm(self):
+		"""
+		Retourne la norme du vecteur
+		"""
+		return (self.x * self.x + self.y * self.y)**0.5
+
+	def norm2(self):
+		"""
+		Retourne la norme au carré du vecteur
+		"""
+		return self.x * self.x + self.y * self.y
+
+	def rotate(self, teta):
+		"""
+		Retourne un vecteur ayant subit une rotation de teta (en radian).
+		"""
+		return Vector(self.x*cos(teta) - self.y*sin(teta), self.x*sin(teta)+self.y*cos(teta))

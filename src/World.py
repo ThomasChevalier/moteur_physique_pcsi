@@ -1,5 +1,7 @@
 import time
 
+from collision import *
+
 class World:
 	def __init__(self):
 		"""
@@ -8,7 +10,10 @@ class World:
 		"""
 
 		self.bodies = []
+		self.envs = []
+
 		self.last_update = 0
+		self.time_origin = 0
 
 		self.time_factor = 1 # Par combien ralentir ou accélérer le temps
 		self.pause = True	# En pause ou non
@@ -19,7 +24,8 @@ class World:
 		"""
 
 		self.pause = False
-		self.last_update = time.clock()
+		self.last_update = time.time()
+		self.time_origin = self.last_update
 
 	def set_paused(self, pause):
 		"""
@@ -38,7 +44,7 @@ class World:
 		"""
 		Ajoute un objet au monde.
 		"""
-
+		print("L'objet %s a été ajouté au monde." % (body.name))
 		self.bodies.append(body)
 
 	def update(self):
@@ -51,11 +57,33 @@ class World:
 		if self.pause == True:
 			return
 
-		# Calcule dt
-		now = time.clock()
+		# Calcule dt et t
+		now = time.time()
+		# print("now = ", now)
 		dt = (now - self.last_update) * self.time_factor
+		t = (now - self.time_origin) * self.time_factor
 		self.last_update = now
 
-		# Mise à jour
+		# Calcule les forces globales
 		for body in self.bodies:
-			body.update(dt)
+			for env in self.envs:
+				if body in env:
+					for force in env.forces:
+						body.apply_force(force, body.G)
+
+		# Mise à jour des vitesses / positions
+		for body in self.bodies:
+			body.update(t, dt)
+
+		check_collision(self.bodies)
+		# for i in range(len(self.bodies)):
+		# 	for j in range(i+1, len(self.bodies)):
+		# 		if self.bodies[i].geometry.intersect(self.bodies[j].geometry):
+		# 			self.bodies[i].vel = self.bodies[i].vel * -0.95
+		# 			self.bodies[j].vel = self.bodies[j].vel*-0.95
+
+	def add_environment(self, env):
+		for body in self.bodies:
+			if body in env:
+				print("body %s is in env %s" % (body.name, env.name))
+		self.envs.append(env)

@@ -2,6 +2,20 @@ from Vector import Vector
 
 zoom = 1
 
+def object_to_world(object, object_coord):
+	"""
+	Convertie un vecteur de coordonnées exprimé dans le référentiel d'un objet
+	dans le référentiel du monde
+	"""
+	return object.geometry.pos + object_coord
+
+def world_to_object(world, object):
+	"""
+	Convertie un vecteur de coordonnées exprimé dans le référentiel du monde
+	dans le référentiel de l'objet
+	"""
+	return world - object.geometry.pos
+
 def world_to_scene(world):
 	"""
 	Convertie un vecteur de coordonnées du monde vers un vecteur de coordonées de la scène.
