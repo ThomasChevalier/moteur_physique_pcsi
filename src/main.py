@@ -14,8 +14,6 @@ from Vector import Vector
 from Geometry import GeometryType
 
 from render import *
-from coordinates import set_zoom
-from coordinates import get_zoom
 from forces import *
 
 
@@ -27,22 +25,24 @@ if __name__ == "__main__":
 
 	world = World()
 
-	apple = RigidBody(world, "apple")
-	apple.mass = 1e8/10
-	apple.geometry.type = GeometryType.Circle
-	apple.geometry.radius = 0.1
-	apple.geometry.pos = Vector(3, -2)
-	apple.log = True
-	apple.geometry.calc_bounding_box()
-	apple.geometry.color = (0, 255, 0)
+	# apple = RigidBody(world, "apple")
+	# apple.mass = 1
+	# apple.geometry.type = GeometryType.Circle
+	# apple.geometry.radius = 0.1
+	# apple.geometry.pos = Vector(0, 10)
+	# apple.G = Vector(apple.geometry.radius, -apple.geometry.radius)
+	# apple.log = True
+	# apple.geometry.color = (0, 255, 0)
+	# apple.geometry.calc_bounding_box()
 
-	# earth = RigidBody(world, "earth")
-	# earth.mass = 5.9736e24
-	# earth.geometry.type = GeometryType.Circle
-	# earth.geometry.radius = 6378137
-	# earth.geometry.pos = Vector(0, -6378137-10)
-	# earth.geometry.calc_bounding_box()
-	# earth.geometry.color = (0, 0, 255)
+	earth = RigidBody(world, "earth")
+	earth.mass = 5.9736e24
+	earth.geometry.type = GeometryType.Circle
+	earth.geometry.radius = 6378137
+	earth.geometry.pos = Vector(-6378137, 0)
+	earth.G = Vector(earth.geometry.radius, -earth.geometry.radius)
+	earth.geometry.color = (0, 0, 255)
+	earth.geometry.calc_bounding_box()
 
 	space = Environment(world, "space")
 	space.geographyFunc = lambda obj : True
@@ -51,8 +51,6 @@ if __name__ == "__main__":
 	world.time_factor = 1
 	world.start()
 
-	set_zoom(100)
-
 	fps = 0
 	fps_timer = time.time()
 	render_time = 0
@@ -60,7 +58,10 @@ if __name__ == "__main__":
 	event_time = 0
 
 	zooming = False
+	window.view.zoom(0.01)
+	window.view.center = (0, 0)
 
+	id = 0
 	while window.is_open:
 		for event in window.events:
 			# Ferme la fenêtre
@@ -85,11 +86,9 @@ if __name__ == "__main__":
 					view = window.view
 					view.move(0, view.size.y/25)
 				if event.code == sf.Keyboard.I:
-					set_zoom(get_zoom()*1.5)
-					print("Zoom : ", get_zoom())
+					window.view.zoom(2/3)
 				if event.code == sf.Keyboard.O:
-					set_zoom(get_zoom()/1.5)
-					print("Zoom : ", get_zoom())
+					window.view.zoom(1.5)
 
 				if event.code == sf.Keyboard.A :
 					accY = [a.y for a in apple.accList]
@@ -106,18 +105,20 @@ if __name__ == "__main__":
 
 			# Rempli d'objet
 			if type(event) is sf.MouseButtonEvent and event.pressed and event.button == 0:
-				pos = event.position
-
+				pos = window.map_pixel_to_coords(event.position)
+				
 				for i in range(0, 1):
 					for j in range(0, 1):
-						w = scene_to_world(Vector(pos[0], pos[1])+Vector(i*30,j*30))
-						obj = RigidBody(world, str(i)+str(j))
-						obj.mass = 1e8
+						obj = RigidBody(world, str(id))
+						id += 1
+						obj.mass = 1
 						obj.geometry.type = GeometryType.Circle
 						obj.geometry.radius = 0.1
-						obj.geometry.pos = w
-						obj.geometry.calc_bounding_box()
+						obj.G = Vector(obj.geometry.radius, -obj.geometry.radius)
+						obj.geometry.pos = scene_to_world(Vector(pos[0], pos[1])+Vector(i*obj.geometry.radius*6,j*obj.geometry.radius*4))
 						obj.geometry.color = (i*35+70, j*35+70, (i+j)/2*35+70)
+						obj.geometry.calc_bounding_box()
+						# obj.attach_force(wind, obj.G)
 
 			if type(event) is sf.MouseButtonEvent and event.button == 1:
 				if event.pressed:
@@ -135,6 +136,7 @@ if __name__ == "__main__":
 					rect.width = lastPos.x - zoomPos.x
 					rect.height = rect.width / window.size.x * window.size.y
 					window.view = sf.View(rect)
+					print("Largeur : ", rect.width)
 			if type(event) is sf.MouseMoveEvent:
 				if zooming:
 					lastPos = window.map_pixel_to_coords(event.position)
@@ -146,7 +148,6 @@ if __name__ == "__main__":
 		update_time += time.time() - a
 
 		a = time.time()
-
 
 		window.clear(sf.Color.WHITE)
 		render(window, world)

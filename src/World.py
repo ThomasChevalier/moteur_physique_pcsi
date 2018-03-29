@@ -76,11 +76,6 @@ class World:
 			body.update(t, dt)
 
 		check_collision(self.bodies)
-		# for i in range(len(self.bodies)):
-		# 	for j in range(i+1, len(self.bodies)):
-		# 		if self.bodies[i].geometry.intersect(self.bodies[j].geometry):
-		# 			self.bodies[i].vel = self.bodies[i].vel * -0.95
-		# 			self.bodies[j].vel = self.bodies[j].vel*-0.95
 
 	def add_environment(self, env):
 		for body in self.bodies:

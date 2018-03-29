@@ -3,8 +3,6 @@ from sfml import sf
 from coordinates import *
 from Geometry import GeometryType
 
-white = (255, 255, 255)
-
 def render(window, world):
 	"""
 	Permet d'effectuer le rendu sur l'écran des objets du monde.
@@ -18,12 +16,12 @@ def render(window, world):
 		
 		if obj.geometry.type == GeometryType.Circle:
 			size = obj.geometry.radius # m
-			size *= get_zoom()
 
 			circle = sf.CircleShape()
+			circle.point_count = 1000
 			circle.radius = size
 			circle.fill_color = sf.Color(obj.geometry.color[0], obj.geometry.color[1], obj.geometry.color[2])
-			circle.origin = (size / 2, size / 2)
+			circle.origin = (0, 0)
 			circle.position = (pos.x, pos.y)
 			window.draw(circle)
 

@@ -7,7 +7,7 @@ class RigidBody:
 	def __init__(self, world, name):
 		"""
 		Constructeur d'un solide indéformable
-		Le référentiel de l'objet à pour origine son coin en haut à gauche
+		Le référentiel de l'objet à pour origine son coin en haut à gauche dans tous les cas.
 		"""
 		self.vel = Vector(0, 0)
 		self.v_rot = Vector(0, 0)

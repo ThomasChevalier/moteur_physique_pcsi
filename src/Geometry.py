@@ -112,7 +112,9 @@ class Geometry:
 
 		# Collision cercle / cercle
 		if self.type == GeometryType.Circle and other.type == GeometryType.Circle:
-			vecDist = self.pos - other.pos
+			# Attention ici car la position de l'objet est celle de son point en haut à gauche.
+			# Il faut donc ajouter le rayon sur les deux composantes pour obtenir la position du centre
+			vecDist = self.pos + Vector(self.radius, -self.radius) - (other.pos + Vector(other.radius, -other.radius))
 			# Calcul le carré pour des questions de performance
 			if vecDist.norm2() <= (self.radius+other.radius)*(self.radius+other.radius):
 				# Intersection

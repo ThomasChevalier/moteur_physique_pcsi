@@ -1,7 +1,5 @@
 from Vector import Vector
 
-zoom = 1
-
 def object_to_world(object, object_coord):
 	"""
 	Convertie un vecteur de coordonnées exprimé dans le référentiel d'un objet
@@ -23,9 +21,7 @@ def world_to_scene(world):
 
 	world : un vecteur de coordonnées du monde
 	"""
-
-	global zoom
-	return Vector(world.x, -world.y) * zoom
+	return Vector(world.x, -world.y)
 
 def scene_to_world(scene):
 	"""
@@ -34,20 +30,4 @@ def scene_to_world(scene):
 	
 	scene : un vecteur de coordonnées de la scène
 	"""
-	global zoom
-	return Vector(scene.x, -scene.y) / zoom
-
-def set_zoom(z):
-	"""
-	Permet d'affecter une valeur à la variable globale zoom
-	"""
-
-	global zoom
-	zoom = z
-
-def get_zoom():
-	"""
-	Permet de récupérer la valeur de la variable globale zoom
-	"""
-	global zoom
-	return zoom
+	return Vector(scene.x, -scene.y)
